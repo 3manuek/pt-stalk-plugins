@@ -1,3 +1,4 @@
+# Emanuel Calvo - Marcos Albe 
 
 # Configure here
 delta_threshold=5    # units needed compared with last run.
@@ -17,8 +18,10 @@ trg_plugin() {
      then
           PLUGIN_previous_sample=`cat ${PLUGIN_tmp_tables_file}`
           PLUGIN_current_sample=$(mysql ${EXT_ARGV} -BNe "SHOW GLOBAL STATUS LIKE 'Created_tmp_tables'" | awk '{ print $2 }')
-          echo "${PLUGIN_current_sample}" > $PLUGIN_tmp_tables_file;
-          echo $(($PLUGIN_current_sample - $PLUGIN_previous_sample)) | awk '{ print $1 }'
+          [[ VALUE_STATUS_FIX -gt $delta_threshold ]] && { echo "$VALUE_STATUS_FIX" > $FLAG_STALK ; echo "VALUE_STATUS_FIX" ; } \
+              || { echo 0 ; } 
+          # echo "${PLUGIN_current_sample}" > $PLUGIN_tmp_tables_file;
+          # echo $(($PLUGIN_current_sample - $PLUGIN_previous_sample)) | awk '{ print $1 }'
      else
           mysql $EXT_ARGV -BNe "SHOW GLOBAL STATUS LIKE '${STATUS_FIX}'" | awk '{ print $2 }' > $FLAG_STALK
           echo 0;
