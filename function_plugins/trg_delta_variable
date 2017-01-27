@@ -1,0 +1,27 @@
+
+# Configure here
+delta_threshold=5    # units needed compared with last run.
+                     # TODO: set a different threshold per item on tracked_status
+# expired_delta=5min # TODO
+tracked_status=""    # comma OR space separated  status variables. 
+
+trg_plugin() {
+   PREFIX_FLAG_STALK="/tmp/pt-stalk-track-""
+
+   for STATUS_FIX in ${tracked_status/(,|[ ])/\\n}
+   do
+     FLAG_STALK=${PREFIX_FLAG_STALK}${STATUS_FIX}     
+     VALUE_STATUS_FIX=$(mysql $EXT_ARGV -BNe "SHOW GLOBAL STATUS LIKE '${STATUS_FIX}'")
+
+     if [[ -f $FLAG_STALK && -s $FLAG_STALK ]]
+     then
+          PLUGIN_previous_sample=`cat ${PLUGIN_tmp_tables_file}`
+          PLUGIN_current_sample=$(mysql ${EXT_ARGV} -BNe "SHOW GLOBAL STATUS LIKE 'Created_tmp_tables'" | awk '{ print $2 }')
+          echo "${PLUGIN_current_sample}" > $PLUGIN_tmp_tables_file;
+          echo $(($PLUGIN_current_sample - $PLUGIN_previous_sample)) | awk '{ print $1 }'
+     else
+          mysql $EXT_ARGV -BNe "SHOW GLOBAL STATUS LIKE '${STATUS_FIX}'" | awk '{ print $2 }' > $FLAG_STALK
+          echo 0;
+     fi
+  done
+}
