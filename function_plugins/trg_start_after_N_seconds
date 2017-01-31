@@ -10,6 +10,6 @@ trg_plugin() {
 # chmod +x start_after_N_seconds
 # Example: $((3600*3 + 1800)) (3.5 hours)
 # sudo ./pt-stalk --run-time=60 --sleep=60 --interval=30 --iterations=3 --cycles=1 \
-#                 --function=start_after_N_seconds.sh --threshold=$((3600*3 + 1800)) 
+#                 --function=trg_start_after_N_seconds --threshold=$((3600*3 + 1800)) 
 #                 --dest=ptstalk_136088 -- --user=<user> --pass=<pass> --port=<port if not default> --socket=<socket file> &
 # echo $! > .pidptstalk
