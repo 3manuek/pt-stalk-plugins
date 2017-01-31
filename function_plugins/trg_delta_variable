@@ -16,10 +16,11 @@ trg_plugin() {
 
      if [[ -f $FLAG_STALK && -s $FLAG_STALK ]]
      then
-          [[ VALUE_STATUS_FIX -gt $delta_threshold ]] && { echo "$VALUE_STATUS_FIX" > $FLAG_STALK ; echo "VALUE_STATUS_FIX" ; } \
-              || { echo 0 ; } 
+          echo "$VALUE_STATUS_FIX" > $FLAG_STALK 
+          [[ VALUE_STATUS_FIX -gt $delta_threshold ]] && { echo "VALUE_STATUS_FIX" ; } \
+              || {  echo 0 ; } 
      else
-          mysql $EXT_ARGV -BNe "SHOW GLOBAL STATUS LIKE '${STATUS_FIX}'" | awk '{ print $2 }' > $FLAG_STALK
+          echo "$VALUE_STATUS_FIX" > $FLAG_STALK ;
           echo 0;
      fi
   done
